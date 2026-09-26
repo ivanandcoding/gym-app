@@ -2,7 +2,7 @@ import { useRef, useState } from 'react'
 import { useStore } from '../store'
 import { todayStr } from '../lib/calc'
 import { toast } from '../components/Toast'
-import { THEMES } from '../data/themes'
+import { NEUTRALS, THEMES } from '../data/themes'
 import RestSelect from '../components/RestSelect'
 
 export default function SettingsPage() {
@@ -36,11 +36,10 @@ export default function SettingsPage() {
               const on = (s.settings.theme ?? 'forest') === t.id
               return (
                 <button key={t.id} type="button" className="btn grow" aria-pressed={on} onClick={() => s.setSettings({ theme: t.id })}
-                  style={{ background: t.bg, borderColor: on ? t.accent : t.surface, color: t.ink, borderWidth: 2, minHeight: 56, flexDirection: 'column', gap: 4 }}>
+                  style={{ background: NEUTRALS.bg, borderColor: on ? t.accent2 : NEUTRALS.surface, color: NEUTRALS.ink, borderWidth: 2, minHeight: 56, flexDirection: 'column', gap: 4 }}>
                   <span className="row" style={{ gap: 4 }}>
-                    <span style={{ width: 14, height: 14, borderRadius: 7, background: t.surface, border: '1px solid ' + t.accent }} />
                     <span style={{ width: 14, height: 14, borderRadius: 7, background: t.accent }} />
-                    <span style={{ width: 14, height: 14, borderRadius: 7, background: t.ink }} />
+                    <span style={{ width: 14, height: 14, borderRadius: 7, background: t.accent2 }} />
                   </span>
                   <span>{t.name}{on ? ' ✓' : ''}</span>
                 </button>
