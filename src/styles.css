@@ -1,36 +1,33 @@
-/* Three dark themes, picked in Settings. Forest is the default. */
+/* Three dark themes, picked in Settings. Forest is the default.
+   Each is built from four colours: page background, card background, accent, text. */
 :root, :root[data-theme="forest"] {
   --bg: #0C120F;
-  --bg-2: #131C17;
-  --surface: #1E2A23;
-  --line: #2E3A33;
+  --surface: #131C17;
   --accent: #8FA77A;
-  --accent-2: #B7C9A8;
   --ink: #F4F1EA;
   --ink-2: #A9B0A8;
+  --line: #2E3A33;
 }
 :root[data-theme="navy"] {
   --bg: #0A1020;
-  --bg-2: #10192B;
-  --surface: #1A2538;
-  --line: #2A3447;
+  --surface: #10192B;
   --accent: #7F97B8;
-  --accent-2: #B8CAE3;
   --ink: #F5F3EE;
   --ink-2: #A7B1C2;
+  --line: #2A3447;
 }
 :root[data-theme="plum"] {
   --bg: #120C16;
-  --bg-2: #1A1321;
-  --surface: #261D31;
-  --line: #3A3143;
+  --surface: #1A1321;
   --accent: #9A7BB0;
-  --accent-2: #C6AFD8;
   --ink: #F4F1EA;
   --ink-2: #AAA1B2;
+  --line: #3A3143;
 }
 :root {
   color-scheme: dark;
+  --bg-2: var(--bg);
+  --accent-2: color-mix(in srgb, var(--accent) 60%, var(--ink));
   --surface-2: color-mix(in srgb, var(--line) 55%, var(--surface));
   --grid: color-mix(in srgb, var(--line) 60%, var(--surface));
   --muted: color-mix(in srgb, var(--ink-2) 72%, var(--surface));
