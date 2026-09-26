@@ -124,6 +124,12 @@ export interface Settings {
   sound: boolean
   defaultRest: number
   theme: Theme
+  /** salted SHA-256 of the PIN; absent = no lock */
+  pinHash?: string
+  pinSalt?: string
+  pinLength?: number
+  /** seconds in the background before the PIN is asked again */
+  lockAfterSec: number
 }
 
 /** A one-rep max actually lifted, as opposed to an estimate. */

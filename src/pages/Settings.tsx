@@ -4,6 +4,7 @@ import { todayStr } from '../lib/calc'
 import { toast } from '../components/Toast'
 import { NEUTRALS, THEMES } from '../data/themes'
 import RestSelect from '../components/RestSelect'
+import PinSetup from '../components/PinSetup'
 
 export default function SettingsPage() {
   const s = useStore()
@@ -63,6 +64,8 @@ export default function SettingsPage() {
           <label className="row-between"><span>Beep when rest is over</span><input type="checkbox" checked={s.settings.sound} onChange={(e) => s.setSettings({ sound: e.target.checked })} /></label>
           <p className="tiny muted">On iPhone the timer can only alert while the app is on screen, which is why the screen stays on. Put the phone face up between sets.</p>
         </div>
+
+        <PinSetup />
 
         <div className="card card-pad stack-sm">
           <div className="eyebrow">Your data</div>

@@ -12,7 +12,7 @@ const idbStorage: StateStorage = {
 }
 
 const defaultProfile: Profile = { sex: 'male', heightCm: 179, weights: [{ date: todayStr(), kg: 73 }] }
-const defaultSettings: Settings = { unit: 'kg', barKg: 20, keepAwake: true, sound: true, defaultRest: 120, theme: 'forest' }
+const defaultSettings: Settings = { unit: 'kg', barKg: 20, keepAwake: true, sound: true, defaultRest: 120, theme: 'forest', lockAfterSec: 300 }
 
 function tset(reps: string, weight: number | null = null): TemplateExercise['sets'][number] {
   return { reps, weight, type: 'working' }

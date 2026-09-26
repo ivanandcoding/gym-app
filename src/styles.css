@@ -248,3 +248,17 @@ table.data tr:last-child td { border-bottom: 0; }
 @media (prefers-reduced-motion: reduce) {
   * { transition: none !important; animation: none !important; }
 }
+
+/* PIN lock screen */
+.lock { min-height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 32px 16px calc(32px + env(safe-area-inset-bottom, 0px)); background: var(--bg); }
+.lock-title { font-size: 28px; font-weight: 800; letter-spacing: -0.01em; }
+.lock-sub { color: var(--ink-2); margin-top: 6px; min-height: 22px; }
+.lock-dots { display: flex; gap: 14px; margin: 22px 0 28px; }
+.lock-dots i { width: 14px; height: 14px; border-radius: 50%; border: 2px solid var(--ink-2); display: block; }
+.lock-dots i.on { background: var(--accent-2); border-color: var(--accent-2); }
+.keypad { display: grid; grid-template-columns: repeat(3, 72px); gap: 12px; }
+.keypad button { width: 72px; height: 72px; border-radius: 50%; border: 1px solid var(--line); background: var(--surface); color: var(--ink); font-size: 26px; font-weight: 600; }
+.keypad button:hover { background: var(--surface-2); }
+.keypad button:active { background: var(--accent); color: var(--accent-ink); }
+.keypad button.ghost { background: transparent; border-color: transparent; color: var(--ink-2); font-size: 18px; font-weight: 700; }
+.keypad button[disabled] { opacity: 0.4; }
