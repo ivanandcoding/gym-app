@@ -4,8 +4,8 @@ import { useStore } from '../store'
 import type { Template, TemplateExercise } from '../types'
 import { fmtClock, fmtNum, fromUnit, toUnit, uid } from '../lib/calc'
 import ExercisePicker from '../components/ExercisePicker'
+import RestSelect from '../components/RestSelect'
 
-const REST_OPTIONS = [30, 45, 60, 90, 120, 150, 180, 240, 300]
 
 export default function TemplateEditor() {
   const { id } = useParams()
@@ -74,11 +74,7 @@ export default function TemplateEditor() {
                 </div>
                 <div className="row-between">
                   <button type="button" className="btn btn-sm" onClick={() => patchEx(te.id, (x) => { const l = x.sets[x.sets.length - 1]; x.sets.push(l ? { ...l } : { reps: '8-12', weight: null, type: 'working' }) })}>+ Add set</button>
-                  <label className="tiny muted row" style={{ gap: 4 }}>Rest
-                    <select className="select" style={{ minHeight: 32, padding: '2px 6px', width: 'auto' }} value={te.rest} onChange={(e) => patchEx(te.id, (x) => { x.rest = +e.target.value })}>
-                      {REST_OPTIONS.map((r) => <option key={r} value={r}>{fmtClock(r)}</option>)}
-                    </select>
-                  </label>
+                  <RestSelect value={te.rest} onChange={(v) => patchEx(te.id, (x) => { x.rest = v })} />
                 </div>
                 <input className="input" placeholder="Note for this exercise in this template (e.g. belt, slow tempo)" value={te.note ?? ''} onChange={(e) => patchEx(te.id, (x) => { x.note = e.target.value })} />
               </div>

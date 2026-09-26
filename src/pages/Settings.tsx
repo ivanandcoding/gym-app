@@ -1,8 +1,9 @@
 import { useRef, useState } from 'react'
 import { useStore } from '../store'
-import { fmtClock, todayStr } from '../lib/calc'
+import { todayStr } from '../lib/calc'
 import { toast } from '../components/Toast'
 import { THEMES } from '../data/themes'
+import RestSelect from '../components/RestSelect'
 
 export default function SettingsPage() {
   const s = useStore()
@@ -57,7 +58,7 @@ export default function SettingsPage() {
             <select className="select" style={{ width: 'auto' }} value={s.settings.barKg} onChange={(e) => s.setSettings({ barKg: +e.target.value })}><option value={20}>20 kg</option><option value={15}>15 kg</option><option value={10}>10 kg</option></select>
           </div>
           <div className="row-between"><span>Default rest for new exercises</span>
-            <select className="select" style={{ width: 'auto' }} value={s.settings.defaultRest} onChange={(e) => s.setSettings({ defaultRest: +e.target.value })}>{[60, 90, 120, 150, 180, 240].map((r) => <option key={r} value={r}>{fmtClock(r)}</option>)}</select>
+            <RestSelect label="" value={s.settings.defaultRest} onChange={(v) => s.setSettings({ defaultRest: v })} />
           </div>
           <label className="row-between"><span>Keep the screen on during a workout</span><input type="checkbox" checked={s.settings.keepAwake} onChange={(e) => s.setSettings({ keepAwake: e.target.checked })} /></label>
           <label className="row-between"><span>Beep when rest is over</span><input type="checkbox" checked={s.settings.sound} onChange={(e) => s.setSettings({ sound: e.target.checked })} /></label>

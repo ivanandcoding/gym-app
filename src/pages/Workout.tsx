@@ -2,14 +2,14 @@ import { useEffect, useMemo, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useStore } from '../store'
 import type { SetEntry, SetType, Workout, WorkoutExercise } from '../types'
-import { displayE1rm, fmtClock, fmtDuration, fmtNum, fmtWeight, fromUnit, isCounted, plates, recordsBefore, sessionsFor, setLabel, suggestNext, toUnit, systemLoad } from '../lib/calc'
+import { displayE1rm, fmtDuration, fmtNum, fmtWeight, fromUnit, isCounted, plates, recordsBefore, sessionsFor, setLabel, suggestNext, toUnit, systemLoad } from '../lib/calc'
 import { timer, setTimerSound, useWakeLock } from '../lib/timer'
 import RestTimer from '../components/RestTimer'
 import ExercisePicker from '../components/ExercisePicker'
 import MetaEditor from '../components/MetaEditor'
 import { toast } from '../components/Toast'
+import RestSelect from '../components/RestSelect'
 
-const REST_OPTIONS = [30, 45, 60, 90, 120, 150, 180, 240, 300]
 
 function parseNum(v: string): number | null {
   const n = parseFloat(v.replace(',', '.'))
@@ -227,11 +227,7 @@ function ExerciseBlock({ we, w, bw, template }: { we: WorkoutExercise; w: Workou
           <div className="row" style={{ gap: 6 }}>
             {we.sets.some(isPr) && <span className="pr-badge">PR</span>}
             {plateText && <span className="tiny muted">{plateText}</span>}
-            <label className="tiny muted row" style={{ gap: 4 }}>Rest
-              <select className="select" style={{ minHeight: 32, padding: '2px 6px', width: 'auto' }} value={we.rest} onChange={(e) => update((x) => { x.rest = +e.target.value })}>
-                {REST_OPTIONS.map((r) => <option key={r} value={r}>{fmtClock(r)}</option>)}
-              </select>
-            </label>
+            <RestSelect value={we.rest} onChange={(v) => update((x) => { x.rest = v })} />
           </div>
         </div>
       </div>
