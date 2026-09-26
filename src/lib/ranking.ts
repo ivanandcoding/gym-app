@@ -44,6 +44,23 @@ export function wilksCoefficient(bwKg: number, sex: 'male' | 'female'): number {
   return 500 / denom
 }
 
+/**
+ * Age multiplier from the powerlifting Foster (14-22) and McCulloch (41-90)
+ * coefficients, as published by OpenPowerlifting. Ages 23-40 are the
+ * baseline (1.0); outside that range a lift counts for more.
+ */
+const FOSTER: Record<number, number> = { 14: 1.23, 15: 1.18, 16: 1.13, 17: 1.08, 18: 1.06, 19: 1.04, 20: 1.03, 21: 1.02, 22: 1.01 }
+const MCCULLOCH = [1.010, 1.020, 1.031, 1.043, 1.055, 1.068, 1.082, 1.097, 1.113, 1.130, 1.147, 1.165, 1.184, 1.204, 1.225, 1.246, 1.268, 1.291, 1.315, 1.340,
+  1.366, 1.393, 1.421, 1.450, 1.480, 1.511, 1.543, 1.576, 1.610, 1.645, 1.681, 1.718, 1.756, 1.795, 1.835, 1.876, 1.918, 1.961, 2.005, 2.050,
+  2.096, 2.143, 2.190, 2.238, 2.287, 2.337, 2.388, 2.440, 2.494, 2.549] // ages 41..90
+export function ageFactor(age: number | null | undefined): number {
+  if (age == null || !isFinite(age)) return 1
+  const a = Math.round(age)
+  if (a >= 23 && a <= 40) return 1
+  if (a < 23) return FOSTER[Math.max(14, a)]
+  return MCCULLOCH[Math.min(90, a) - 41]
+}
+
 /** Fraction of an implied powerlifting total that a lift represents. */
 function liftShare(lift: RankLift, sex: 'male' | 'female', addedKg: number): number {
   const dl = sex === 'male' ? 0.396825 : 0.414938
@@ -77,14 +94,14 @@ function chinShare(sex: 'male' | 'female', l: number): number {
  * Score one lift. `loadKg` is the total load moved (bodyweight + added for belt
  * work) at 1RM or estimated 1RM. Returns Wilks / 4 for the implied total.
  */
-export function liftScore(lift: RankLift, loadKg: number, bwKg: number, sex: 'male' | 'female'): number {
+export function liftScore(lift: RankLift, loadKg: number, bwKg: number, sex: 'male' | 'female', age?: number | null): number {
   if (!(loadKg > 0) || !(bwKg > 0)) return 0
   const isBelt = lift === 'dip' || lift === 'chinup' || lift === 'pullup'
   const added = isBelt ? loadKg - bwKg : 0
   const share = liftShare(lift, sex, added)
   if (!(share > 0)) return 0
   const impliedTotal = loadKg / share
-  return (impliedTotal * wilksCoefficient(bwKg, sex)) / 4
+  return (impliedTotal * wilksCoefficient(bwKg, sex) * ageFactor(age)) / 4
 }
 
 export interface Tier { min: number; name: string; color: string }
@@ -191,9 +208,9 @@ export function rank(lifts: LiftResult[]): RankingResult {
 }
 
 /** Load needed on a lift to reach a target score (inverse of liftScore). */
-export function loadForScore(lift: RankLift, target: number, bwKg: number, sex: 'male' | 'female'): number {
+export function loadForScore(lift: RankLift, target: number, bwKg: number, sex: 'male' | 'female', age?: number | null): number {
   const isBelt = lift === 'dip' || lift === 'chinup' || lift === 'pullup'
-  const total = (target * 4) / wilksCoefficient(bwKg, sex)
+  const total = (target * 4) / (wilksCoefficient(bwKg, sex) * ageFactor(age))
   if (!isBelt) return total * liftShare(lift, sex, 0)
   // the belt share depends on the added weight itself: iterate
   let load = bwKg

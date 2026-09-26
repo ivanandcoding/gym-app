@@ -86,7 +86,7 @@ export default function SettingsPage() {
 
         <div className="card card-pad stack-sm">
           <div className="eyebrow">How things are calculated</div>
-          <p className="small dim">Estimated 1RM uses Brzycki (weight × 36 ÷ (37 − reps)) for sets up to 10 reps and Epley above that. Belt exercises count bodyweight plus added weight. Strength levels convert each lift to an implied powerlifting total, score it with the Wilks coefficient for your bodyweight, and divide by 4; 60 is Intermediate, 75 Proficient, 87.5 Advanced.</p>
+          <p className="small dim">Estimated 1RM uses Brzycki (weight × 36 ÷ (37 − reps)) for sets up to 10 reps and Epley above that. Belt exercises count bodyweight plus added weight. Strength levels convert each lift to an implied powerlifting total, score it with the Wilks coefficient for your bodyweight and the Foster or McCulloch age coefficient (ages 23 to 40 count as 1), and divide by 4; 60 is Intermediate, 75 Proficient, 87.5 Advanced.</p>
         </div>
       </div>
     </div>

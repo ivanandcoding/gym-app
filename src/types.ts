@@ -111,6 +111,8 @@ export interface ExerciseMeta {
 export interface Profile {
   sex: 'male' | 'female'
   heightCm: number
+  /** used for the age adjustment of strength scores */
+  birthYear?: number
   /** bodyweight log, newest last */
   weights: { date: string; kg: number }[]
 }
