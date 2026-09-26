@@ -2,7 +2,8 @@ import { useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useStore } from '../store'
 import { EXERCISES } from '../data/exercises'
-import { e1rm, fmtNum, fmtWeight, fromUnit, isCounted, setsPerBodyPart, systemLoad, toUnit, todayStr } from '../lib/calc'
+import { dateToTs, e1rm, fmtNum, fmtWeight, fromUnit, isCounted, setsPerBodyPart, systemLoad, toUnit, todayStr } from '../lib/calc'
+import OneRmCard from '../components/OneRmCard'
 import { CATEGORY_LABEL, EXERCISE_TO_LIFT, LIFT_CATEGORY, ageFactor, liftScore, loadForScore, nextTier, rank, tierFor, type Category, type LiftResult, type RankLift } from '../lib/ranking'
 import { BODY_PARTS, BODY_PART_LABEL } from '../types'
 import { toast } from '../components/Toast'
@@ -43,8 +44,17 @@ export default function Body() {
         }
       }
     }
+    for (const r of s.oneRms) {
+      const lift = EXERCISE_TO_LIFT[r.exerciseId]
+      const ex = s.exercise(r.exerciseId)
+      if (!lift || !ex) continue
+      const ts = dateToTs(r.date)
+      const age = birthYear ? new Date(ts).getFullYear() - birthYear : null
+      const load = systemLoad(ex, r.weightKg, r.bodyweightKg)
+      lifts.push({ lift, exerciseId: r.exerciseId, loadKg: load, score: liftScore(lift, load, r.bodyweightKg, s.profile.sex, age), date: ts, tested: true })
+    }
     return rank(lifts)
-  }, [s.workouts, s.profile.sex, birthYear, s])
+  }, [s.workouts, s.oneRms, s.profile.sex, birthYear, s])
 
   const weekSets = useMemo(() => {
     const now = Date.now()
@@ -96,6 +106,8 @@ export default function Body() {
           <p className="tiny muted" style={{ marginTop: 8 }}>Rankings are normalised by bodyweight and age on the day of each lift. Age uses the powerlifting Foster and McCulloch coefficients: ages 23 to 40 are the baseline, younger and older lifters get credit for the same weight. Height is shown for your record but does not change the score: no published standard uses it.</p>
         </div>
 
+        <OneRmCard />
+
         <div className="card">
           <div className="card-head">
             <div><div className="h3">Strength score</div><div className="tiny muted">Wilks-based, against strength athletes</div></div>
@@ -114,7 +126,7 @@ export default function Body() {
                   {(Object.keys(CATEGORY_LABEL) as Category[]).map((cat) => {
                     const r = results.byCategory[cat]
                     const t = r ? tierFor(r.score) : null
-                    return <tr key={cat}><td>{CATEGORY_LABEL[cat]}</td><td>{r ? LIFT_NAME[r.lift] + ' ' + loadLabel(r, bwNow, unit) : <span className="muted">not logged</span>}</td><td>{r ? fmtNum(r.score, 1) : '—'}</td><td>{t ? <span style={{ color: t.color, fontWeight: 700 }}>{t.name}</span> : '—'}</td></tr>
+                    return <tr key={cat}><td>{CATEGORY_LABEL[cat]}</td><td>{r ? <>{LIFT_NAME[r.lift]} {loadLabel(r, bwNow, unit)}{r.tested ? <span className="tiny muted"> · tested</span> : null}</> : <span className="muted">not logged</span>}</td><td>{r ? fmtNum(r.score, 1) : '—'}</td><td>{t ? <span style={{ color: t.color, fontWeight: 700 }}>{t.name}</span> : '—'}</td></tr>
                   })}
                 </tbody></table>
               </>

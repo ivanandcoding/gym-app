@@ -156,7 +156,7 @@ const MUSCLES_OF: Record<BodyPart, Muscle[]> = {
   glutes: ['glutes', 'hipAdductors'], calves: ['calves'],
 }
 
-export interface LiftResult { lift: RankLift; exerciseId: string; loadKg: number; score: number; date: number }
+export interface LiftResult { lift: RankLift; exerciseId: string; loadKg: number; score: number; date: number; tested?: boolean }
 export interface BodyPartResult { bodyPart: BodyPart; score: number | null; drivers: RankLift[] }
 export interface RankingResult {
   lifts: LiftResult[]

@@ -1,7 +1,7 @@
 import { create } from 'zustand'
 import { persist, createJSONStorage, type StateStorage } from 'zustand/middleware'
 import { get as idbGet, set as idbSet, del as idbDel } from 'idb-keyval'
-import type { AppData, Exercise, ExerciseMeta, Profile, SetEntry, Settings, Template, TemplateExercise, Workout, WorkoutExercise } from './types'
+import type { AppData, Exercise, ExerciseMeta, OneRm, Profile, SetEntry, Settings, Template, TemplateExercise, Workout, WorkoutExercise } from './types'
 import { EXERCISES, EXERCISE_BY_ID } from './data/exercises'
 import { todayStr, uid } from './lib/calc'
 
@@ -86,6 +86,10 @@ interface Actions {
   logBodyweight: (kg: number, date?: string) => void
   bodyweightAt: (ts: number) => number
   setSettings: (patch: Partial<Settings>) => void
+  // tested 1RMs
+  addOneRm: (r: Omit<OneRm, 'id'>) => void
+  deleteOneRm: (id: string) => void
+  setOneRmLifts: (ids: string[]) => void
   // data
   exportJson: () => string
   importJson: (json: string) => { ok: boolean; message: string }
@@ -105,6 +109,8 @@ export const useStore = create<Store>()(
       activeWorkout: null,
       profile: defaultProfile,
       settings: defaultSettings,
+      oneRms: [],
+      oneRmLifts: ['bench-press', 'dip', 'pull-up', 'deadlift'],
       hydrated: false,
       setHydrated: () => set({ hydrated: true }),
 
@@ -203,11 +209,16 @@ export const useStore = create<Store>()(
       },
       setSettings: (patch) => set({ settings: { ...get().settings, ...patch } }),
 
+      addOneRm: (r) => set({ oneRms: get().oneRms.concat({ ...r, id: uid('rm') }).sort((a, b) => a.date.localeCompare(b.date)) }),
+      deleteOneRm: (id) => set({ oneRms: get().oneRms.filter((x) => x.id !== id) }),
+      setOneRmLifts: (ids) => set({ oneRmLifts: ids }),
+
       exportJson: () => {
         const s = get()
         const data: AppData = {
           version: 1, customExercises: s.customExercises, exerciseMeta: s.exerciseMeta, templates: s.templates,
           workouts: s.workouts, activeWorkout: s.activeWorkout, profile: s.profile, settings: s.settings,
+          oneRms: s.oneRms, oneRmLifts: s.oneRmLifts,
         }
         return JSON.stringify({ app: 'gym-app', exportedAt: new Date().toISOString(), ...data }, null, 1)
       },
@@ -228,13 +239,15 @@ export const useStore = create<Store>()(
             exerciseMeta: { ...cur.exerciseMeta, ...(d.exerciseMeta ?? {}) },
             profile: d.profile ?? cur.profile,
             settings: { ...cur.settings, ...(d.settings ?? {}) },
+            oneRms: merge(cur.oneRms, Array.isArray(d.oneRms) ? d.oneRms : []).sort((a, b) => a.date.localeCompare(b.date)),
+            oneRmLifts: Array.isArray(d.oneRmLifts) ? d.oneRmLifts : cur.oneRmLifts,
           })
           return { ok: true, message: 'Imported ' + d.workouts.length + ' workouts' }
         } catch {
           return { ok: false, message: 'Could not read that file' }
         }
       },
-      wipe: () => set({ workouts: [], activeWorkout: null, templates: seedTemplates(), exerciseMeta: {}, customExercises: [] }),
+      wipe: () => set({ workouts: [], activeWorkout: null, templates: seedTemplates(), exerciseMeta: {}, customExercises: [], oneRms: [] }),
     }),
     {
       name: 'gym-app-v1',
@@ -242,6 +255,7 @@ export const useStore = create<Store>()(
       partialize: (s) => ({
         version: s.version, customExercises: s.customExercises, exerciseMeta: s.exerciseMeta, templates: s.templates,
         workouts: s.workouts, activeWorkout: s.activeWorkout, profile: s.profile, settings: s.settings,
+        oneRms: s.oneRms, oneRmLifts: s.oneRmLifts,
       }),
       merge: (persisted, current) => {
         const p = (persisted ?? {}) as Partial<AppData>

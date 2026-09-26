@@ -126,8 +126,23 @@ export interface Settings {
   theme: Theme
 }
 
+/** A one-rep max actually lifted, as opposed to an estimate. */
+export interface OneRm {
+  id: string
+  exerciseId: string
+  /** YYYY-MM-DD */
+  date: string
+  /** kg, in the exercise's convention (added weight for belt work) */
+  weightKg: number
+  bodyweightKg: number
+  note?: string
+}
+
 export interface AppData {
   version: 1
+  oneRms: OneRm[]
+  /** exercises shown on the tested 1RM card */
+  oneRmLifts: string[]
   customExercises: Exercise[]
   exerciseMeta: Record<string, ExerciseMeta>
   templates: Template[]

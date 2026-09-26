@@ -1,7 +1,7 @@
 import { useMemo } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { useStore } from '../store'
-import { fmtDate, fmtNum, sessionsFor, setLabel, toUnit } from '../lib/calc'
+import { dateToTs, fmtDate, fmtNum, sessionsFor, setLabel, toUnit } from '../lib/calc'
 import { BODY_PART_LABEL } from '../types'
 import MetaEditor from '../components/MetaEditor'
 import Chart from '../components/Chart'
@@ -40,6 +40,16 @@ export default function ExerciseDetail() {
             <div className="card-body table-wrap">
               <table className="data"><thead><tr><th>Date</th><th>Sets</th><th>{bwOnly ? 'Best' : 'e1RM'}</th></tr></thead><tbody>
                 {[...sessions].reverse().map((p) => <tr key={p.workoutId}><td>{fmtDate(p.date, true)}</td><td>{p.sets.map((x) => setLabel(ex, x, unit)).join(', ')}</td><td>{bwOnly ? p.bestE1 : fmtNum(toUnit(p.bestE1, unit))}</td></tr>)}
+              </tbody></table>
+            </div>
+          </div>
+        )}
+        {s.oneRms.some((r) => r.exerciseId === ex.id) && (
+          <div className="card">
+            <div className="card-head"><div className="h3">Tested 1RMs</div></div>
+            <div className="card-body table-wrap">
+              <table className="data"><thead><tr><th>Date</th><th>1RM</th><th>Bodyweight</th></tr></thead><tbody>
+                {s.oneRms.filter((r) => r.exerciseId === ex.id).slice().reverse().map((r) => <tr key={r.id}><td>{fmtDate(dateToTs(r.date), true)}</td><td>{(ex.type === 'weighted_bodyweight' && r.weightKg >= 0 ? '+' : '') + fmtNum(toUnit(r.weightKg, unit))} {unit}</td><td>{fmtNum(toUnit(r.bodyweightKg, unit))} {unit}</td></tr>)}
               </tbody></table>
             </div>
           </div>

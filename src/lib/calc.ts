@@ -180,3 +180,9 @@ export function suggestNext(sets: SetEntry[], targetRepsTop: number | null, ex: 
   const inc = ex.equipment === 'barbell' ? (ex.bodyPart === 'quads' || ex.bodyPart === 'hamstrings' || ex.bodyPart === 'glutes' || ex.id === 'deadlift' ? 5 : 2.5) : ex.equipment === 'dumbbell' ? 2 : 2.5
   return { weight: w + inc, reason: 'All sets hit the top of the range: add ' + inc + ' kg' }
 }
+
+/** Local-noon timestamp for a YYYY-MM-DD string. */
+export function dateToTs(s: string): number {
+  const p = s.split('-').map(Number)
+  return new Date(p[0], p[1] - 1, p[2], 12).getTime()
+}
