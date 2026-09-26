@@ -2,6 +2,7 @@ import { useRef, useState } from 'react'
 import { useStore } from '../store'
 import { fmtClock, todayStr } from '../lib/calc'
 import { toast } from '../components/Toast'
+import { THEMES } from '../data/themes'
 
 export default function SettingsPage() {
   const s = useStore()
@@ -27,6 +28,26 @@ export default function SettingsPage() {
     <div className="page">
       <header className="topbar"><h1 className="title">Settings</h1></header>
       <div className="stack">
+        <div className="card card-pad stack-sm">
+          <div className="eyebrow">Theme</div>
+          <div className="row" style={{ gap: 8 }}>
+            {THEMES.map((t) => {
+              const on = (s.settings.theme ?? 'forest') === t.id
+              return (
+                <button key={t.id} type="button" className="btn grow" aria-pressed={on} onClick={() => s.setSettings({ theme: t.id })}
+                  style={{ background: t.bg, borderColor: on ? t.accent2 : t.surface, color: t.accent2, borderWidth: 2, minHeight: 56, flexDirection: 'column', gap: 4 }}>
+                  <span className="row" style={{ gap: 4 }}>
+                    <span style={{ width: 14, height: 14, borderRadius: 7, background: t.accent }} />
+                    <span style={{ width: 14, height: 14, borderRadius: 7, background: t.accent2 }} />
+                    <span style={{ width: 14, height: 14, borderRadius: 7, background: t.surface, border: '1px solid ' + t.accent }} />
+                  </span>
+                  <span>{t.name}{on ? ' ✓' : ''}</span>
+                </button>
+              )
+            })}
+          </div>
+        </div>
+
         <div className="card card-pad stack-sm">
           <div className="eyebrow">Training</div>
           <div className="row-between"><span>Weight unit</span>

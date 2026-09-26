@@ -1,4 +1,5 @@
 export type Unit = 'kg' | 'lb'
+export type Theme = 'forest' | 'navy' | 'plum'
 
 export type BodyPart =
   | 'chest' | 'back' | 'shoulders' | 'biceps' | 'triceps' | 'forearms'
@@ -120,6 +121,7 @@ export interface Settings {
   keepAwake: boolean
   sound: boolean
   defaultRest: number
+  theme: Theme
 }
 
 export interface AppData {

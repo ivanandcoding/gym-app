@@ -12,7 +12,7 @@ const idbStorage: StateStorage = {
 }
 
 const defaultProfile: Profile = { sex: 'male', heightCm: 179, weights: [{ date: todayStr(), kg: 73 }] }
-const defaultSettings: Settings = { unit: 'kg', barKg: 20, keepAwake: true, sound: true, defaultRest: 120 }
+const defaultSettings: Settings = { unit: 'kg', barKg: 20, keepAwake: true, sound: true, defaultRest: 120, theme: 'forest' }
 
 function tset(reps: string, weight: number | null = null): TemplateExercise['sets'][number] {
   return { reps, weight, type: 'working' }
@@ -243,6 +243,10 @@ export const useStore = create<Store>()(
         version: s.version, customExercises: s.customExercises, exerciseMeta: s.exerciseMeta, templates: s.templates,
         workouts: s.workouts, activeWorkout: s.activeWorkout, profile: s.profile, settings: s.settings,
       }),
+      merge: (persisted, current) => {
+        const p = (persisted ?? {}) as Partial<AppData>
+        return { ...current, ...p, settings: { ...current.settings, ...(p.settings ?? {}) }, profile: { ...current.profile, ...(p.profile ?? {}) } }
+      },
       onRehydrateStorage: () => (state) => { state?.setHydrated() },
     },
   ),
