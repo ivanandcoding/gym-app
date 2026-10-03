@@ -80,22 +80,6 @@ export default function Progress() {
               {!bwOnly && m === 'e1rm' && <p className="tiny muted" style={{ marginTop: 8 }}>Estimated 1RM from your best set each session (Brzycki up to 10 reps). {ex.type === 'weighted_bodyweight' ? 'Shown as added weight; bodyweight is included in the calculation.' : ''}</p>}
             </div>
           </div>
-          <div className="card">
-            <div className="card-head"><div className="h3">All-time bests</div></div>
-            <div className="card-body table-wrap">
-              <table className="data"><thead><tr><th>Exercise</th><th>Best set</th><th>e1RM</th><th>Tested 1RM</th><th>When</th></tr></thead><tbody>
-                {logged.map((id) => {
-                  const e = s.exercise(id)!
-                  const ss = sessionsFor(s.workouts, e, s.bodyweightAt)
-                  if (!ss.length) return null
-                  const b = ss.reduce((a, c) => (c.bestE1 > a.bestE1 ? c : a))
-                  const tested = s.oneRms.filter((r) => r.exerciseId === id)
-                  const tb = tested.length ? tested.reduce((a, c) => (c.weightKg > a.weightKg ? c : a)) : null
-                  return <tr key={id}><td><Link to={'/exercise/' + id}>{e.name}</Link></td><td>{setLabel(e, b.best, unit)}</td><td>{e.type === 'bodyweight_reps' ? '—' : fmtNum(toUnit(b.bestE1, unit))}</td><td>{tb ? (e.type === 'weighted_bodyweight' && tb.weightKg >= 0 ? '+' : '') + fmtNum(toUnit(tb.weightKg, unit)) : '—'}</td><td>{fmtDate(b.date)}</td></tr>
-                })}
-              </tbody></table>
-            </div>
-          </div>
         </div>
       )}
     </div>

@@ -4,6 +4,8 @@ import { todayStr } from '../lib/calc'
 import { toast } from '../components/Toast'
 import { NEUTRALS, THEMES } from '../data/themes'
 import RestSelect from '../components/RestSelect'
+import StatsCard from '../components/StatsCard'
+import BackupsCard from '../components/BackupsCard'
 
 export default function SettingsPage() {
   const s = useStore()
@@ -48,6 +50,8 @@ export default function SettingsPage() {
           </div>
         </div>
 
+        <StatsCard />
+
         <div className="card card-pad stack-sm">
           <div className="eyebrow">Training</div>
           <div className="row-between"><span>Weight unit</span>
@@ -72,6 +76,7 @@ export default function SettingsPage() {
             <button type="button" className="btn" onClick={() => file.current?.click()}>Import backup</button>
             <input ref={file} type="file" accept=".json,application/json" hidden onChange={(e) => { importData(e.target.files?.[0]); e.target.value = '' }} />
           </div>
+          <BackupsCard />
           <div className="row" style={{ marginTop: 6 }}>
             {confirmWipe ? (
               <>
@@ -83,10 +88,6 @@ export default function SettingsPage() {
           </div>
         </div>
 
-        <div className="card card-pad stack-sm">
-          <div className="eyebrow">How things are calculated</div>
-          <p className="small dim">Estimated 1RM uses Brzycki (weight × 36 ÷ (37 − reps)) for sets up to 10 reps and Epley above that. Belt exercises count bodyweight plus added weight. Strength levels convert each lift to an implied powerlifting total, score it with the Wilks coefficient for your bodyweight and the Foster or McCulloch age coefficient (ages 23 to 40 count as 1), and divide by 4; 60 is Intermediate, 75 Proficient, 87.5 Advanced.</p>
-        </div>
       </div>
     </div>
   )

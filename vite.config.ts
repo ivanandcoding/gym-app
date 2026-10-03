@@ -3,7 +3,7 @@ import react from '@vitejs/plugin-react'
 import { VitePWA } from 'vite-plugin-pwa'
 
 // VITE_BASE lets the same build live under a sub-path, e.g. /gym-app/ on GitHub Pages.
-const base = process.env.VITE_BASE ?? '/'
+const base = (globalThis as { process?: { env?: Record<string, string | undefined> } }).process?.env?.VITE_BASE ?? '/'
 
 export default defineConfig({
   base,
