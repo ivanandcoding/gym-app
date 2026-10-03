@@ -100,7 +100,6 @@ export default function OneRmCard() {
           )
         })}
         {!s.oneRmLifts.length && <div className="empty small">No lifts tracked. Tap “+ Lift” to add one.</div>}
-        <p className="tiny muted" style={{ marginTop: 8 }}>A tested max counts toward your strength score at the bodyweight and age on that day, and beats an estimate from reps.</p>
       </div>
       <ExercisePicker open={picker} title="Track a 1RM for" onClose={() => setPicker(false)} onPick={(id) => { if (!s.oneRmLifts.includes(id)) s.setOneRmLifts(s.oneRmLifts.concat(id)); setPicker(false) }} />
     </div>

@@ -2,6 +2,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import { useStore } from '../store'
 import { fmtDate, fmtDuration, uid } from '../lib/calc'
 import { useState } from 'react'
+import Notices from '../components/Notices'
 
 export default function Train() {
   const nav = useNavigate()
@@ -28,6 +29,7 @@ export default function Train() {
     <div className="page">
       <header className="topbar"><h1 className="title">Train<small>Templates</small></h1></header>
       <div className="stack">
+        <Notices />
         {active && (
           <div className="card card-pad stack-sm" style={{ borderColor: 'var(--accent)' }}>
             <div className="eyebrow">Workout in progress</div>

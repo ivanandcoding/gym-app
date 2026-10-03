@@ -8,6 +8,7 @@ import RestTimer from '../components/RestTimer'
 import ExercisePicker from '../components/ExercisePicker'
 import MetaEditor from '../components/MetaEditor'
 import { toast } from '../components/Toast'
+import { takeSnapshot } from '../lib/backup'
 import RestSelect from '../components/RestSelect'
 
 
@@ -63,6 +64,7 @@ function Session({ w }: { w: Workout }) {
     }
     const done = s.finishWorkout()
     timer.stop()
+    takeSnapshot(true)
     if (!done) { toast('Nothing logged, workout discarded'); nav('/'); return }
     toast('Workout saved')
     nav('/history')
