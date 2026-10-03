@@ -65,7 +65,6 @@ export default function SettingsPage() {
           </div>
           <label className="row-between"><span>Keep the screen on during a workout</span><input type="checkbox" checked={s.settings.keepAwake} onChange={(e) => s.setSettings({ keepAwake: e.target.checked })} /></label>
           <label className="row-between"><span>Beep when rest is over</span><input type="checkbox" checked={s.settings.sound} onChange={(e) => s.setSettings({ sound: e.target.checked })} /></label>
-          <p className="tiny muted">On iPhone the timer can only alert while the app is on screen, which is why the screen stays on. Put the phone face up between sets.</p>
         </div>
 
         <div className="card card-pad stack-sm">
