@@ -186,3 +186,13 @@ export function dateToTs(s: string): number {
   const p = s.split('-').map(Number)
   return new Date(p[0], p[1] - 1, p[2], 12).getTime()
 }
+
+/** "today", "yesterday", "3 days ago", "2 weeks ago". */
+export function fmtAgo(ts: number): string {
+  const days = Math.floor((Date.now() - ts) / 86400000)
+  if (days <= 0) return 'Today'
+  if (days === 1) return 'Yesterday'
+  if (days < 14) return days + ' days ago'
+  if (days < 60) return Math.floor(days / 7) + ' weeks ago'
+  return Math.floor(days / 30) + ' months ago'
+}

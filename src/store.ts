@@ -234,7 +234,8 @@ export const useStore = create<Store>()(
           }
           set({
             workouts: merge(cur.workouts, d.workouts),
-            templates: merge(cur.templates, Array.isArray(d.templates) ? d.templates : []),
+            // unused seed templates with the same name as an imported one would only duplicate it
+            templates: merge(cur.templates.filter((t) => t.lastUsedAt || !(Array.isArray(d.templates) && d.templates.some((x: Template) => x.name === t.name))), Array.isArray(d.templates) ? d.templates : []),
             customExercises: merge(cur.customExercises, Array.isArray(d.customExercises) ? d.customExercises : []),
             exerciseMeta: { ...cur.exerciseMeta, ...(d.exerciseMeta ?? {}) },
             profile: d.profile ?? cur.profile,

@@ -60,7 +60,7 @@ export default function SettingsPage() {
           <div className="row-between"><span>Barbell weight (plate math)</span>
             <select className="select" style={{ width: 'auto' }} value={s.settings.barKg} onChange={(e) => s.setSettings({ barKg: +e.target.value })}><option value={20}>20 kg</option><option value={15}>15 kg</option><option value={10}>10 kg</option></select>
           </div>
-          <div className="row-between"><span>Default rest for new exercises</span>
+          <div className="row-between"><span>Default rest</span>
             <RestSelect label="" value={s.settings.defaultRest} onChange={(v) => s.setSettings({ defaultRest: v })} />
           </div>
           <label className="row-between"><span>Keep the screen on during a workout</span><input type="checkbox" checked={s.settings.keepAwake} onChange={(e) => s.setSettings({ keepAwake: e.target.checked })} /></label>

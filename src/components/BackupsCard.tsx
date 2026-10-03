@@ -11,10 +11,7 @@ export default function BackupsCard() {
   void tick
   return (
     <div className="stack-sm">
-      <div className="row-between">
-        <span className="small dim">Automatic backups on this device, last 7 days</span>
-        <button type="button" className="btn btn-sm" onClick={() => { toast(takeSnapshot(true) ? 'Backup saved' : 'Nothing to back up yet'); setTick((t) => t + 1) }}>Back up now</button>
-      </div>
+      <button type="button" className="btn btn-primary btn-block btn-lg" onClick={() => { toast(takeSnapshot(true) ? 'Backup saved' : 'Nothing to back up yet'); setTick((t) => t + 1) }}>Back up now</button>
       {snaps.length === 0 ? <div className="tiny muted">None yet. One is saved automatically each day you open the app.</div> : (
         <table className="data"><tbody>
           {snaps.map((b) => (

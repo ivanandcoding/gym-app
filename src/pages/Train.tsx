@@ -1,7 +1,7 @@
+import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useStore } from '../store'
-import { fmtDate, fmtDuration, uid } from '../lib/calc'
-import { useState } from 'react'
+import { fmtAgo, fmtDate, fmtDuration, uid } from '../lib/calc'
 import Notices from '../components/Notices'
 
 export default function Train() {
@@ -13,6 +13,7 @@ export default function Train() {
   const saveTemplate = useStore((s) => s.saveTemplate)
   const discard = useStore((s) => s.discardWorkout)
   const [confirmDiscard, setConfirmDiscard] = useState(false)
+  const [open, setOpen] = useState<Record<string, boolean>>({})
 
   const start = (templateId?: string) => {
     startWorkout(templateId)
@@ -27,7 +28,7 @@ export default function Train() {
 
   return (
     <div className="page">
-      <header className="topbar"><h1 className="title">Train<small>Templates</small></h1></header>
+      <header className="topbar"><h1 className="title">Train</h1></header>
       <div className="stack">
         <Notices />
         {active && (
@@ -47,23 +48,36 @@ export default function Train() {
           </div>
         )}
 
-        {templates.map((t) => (
-          <div key={t.id} className="card">
-            <div className="card-head">
-              <div className="grow">
-                <div className="h2">{t.name}</div>
-                <div className="small dim">
-                  {t.exercises.map((e) => exercise(e.exerciseId)?.name ?? '?').join(' · ') || 'No exercises yet'}
+        {templates.map((t) => {
+          const isOpen = !!open[t.id]
+          const names = t.exercises.map((e) => exercise(e.exerciseId)?.name ?? '?')
+          return (
+            <div key={t.id} className="card">
+              <div className="card-head" style={{ alignItems: 'flex-start' }}>
+                <div className="grow">
+                  <div className="h2">{t.name}</div>
+                  <div className="last-done">
+                    {t.lastUsedAt ? <><span className="last-done-ago">{fmtAgo(t.lastUsedAt)}</span><span className="dim"> · {fmtDate(t.lastUsedAt, true)}</span></> : <span className="dim">Not done yet</span>}
+                  </div>
                 </div>
-                {t.lastUsedAt && <div className="tiny muted">Last done {fmtDate(t.lastUsedAt, true)}</div>}
+                <button type="button" className="btn btn-sm" aria-expanded={isOpen} onClick={() => setOpen({ ...open, [t.id]: !isOpen })}>
+                  {names.length} {names.length === 1 ? 'exercise' : 'exercises'} <span aria-hidden="true">{isOpen ? '▴' : '▾'}</span>
+                </button>
+              </div>
+              {isOpen && (
+                <div className="card-body">
+                  <ol className="ex-list">
+                    {names.length ? names.map((n, i) => <li key={i}>{n}<span className="tiny muted"> · {t.exercises[i].sets.length} sets</span></li>) : <li className="dim">No exercises yet</li>}
+                  </ol>
+                </div>
+              )}
+              <div className="card-body row">
+                <button type="button" className="btn btn-primary grow" disabled={!!active} onClick={() => start(t.id)}>Start</button>
+                <Link className="btn" to={'/template/' + t.id}>Edit</Link>
               </div>
             </div>
-            <div className="card-body row">
-              <button type="button" className="btn btn-primary grow" disabled={!!active} onClick={() => start(t.id)}>Start</button>
-              <Link className="btn" to={'/template/' + t.id}>Edit</Link>
-            </div>
-          </div>
-        ))}
+          )
+        })}
 
         <div className="row">
           <button type="button" className="btn grow" onClick={newTemplate}>+ New template</button>

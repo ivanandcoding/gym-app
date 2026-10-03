@@ -255,3 +255,8 @@ table.data tr:last-child td { border-bottom: 0; }
 .hero-tier { font-size: 18px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; margin-top: 4px; }
 .hero-bar { height: 6px; border-radius: 3px; background: var(--surface-2); overflow: hidden; margin: 14px auto 0; max-width: 260px; }
 .hero-bar i { display: block; height: 100%; border-radius: 3px; }
+
+/* Train tab: last done */
+.last-done { margin-top: 4px; font-size: 14px; }
+.last-done-ago { display: inline-block; font-weight: 700; color: var(--accent-2); background: var(--accent-soft); border-radius: 999px; padding: 2px 10px; }
+.ex-list { margin: 0 0 4px; padding-left: 22px; font-size: 15px; line-height: 1.7; }
